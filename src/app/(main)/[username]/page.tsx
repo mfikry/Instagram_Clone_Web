@@ -5,6 +5,10 @@ import { useParams } from "next/navigation";
 import api from "@/lib/axios";
 import { Loader2, Grid, Lock, UserPlus, UserMinus, Clock } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import { toast } from "react-hot-toast/headless";
+
 // "KTP" Data Profil biar TypeScript nggak ngamuk
 interface ProfileData {
   profile: {
@@ -32,7 +36,7 @@ interface ProfileData {
 export default function ProfilePage() {
   const params = useParams();
   const username = params.username as string;
-
+  const router = useRouter();
   const [data, setData] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -56,6 +60,13 @@ export default function ProfilePage() {
 
   // Fungsi Action Tombol Follow/Unfollow
   const handleFollowToggle = async () => {
+    // Cek apakah dia tamu?
+    const token = Cookies.get("token");
+    if (!token) {
+      toast.error("Login dulu bos buat follow!");
+      router.push("/login"); // Tendang ke halaman login
+      return;
+    }
     if (!data) return;
     setIsFollowLoading(true);
     try {
@@ -139,9 +150,12 @@ export default function ProfilePage() {
 
             {/* Tombol Action (Edit Profile / Follow / Unfollow) */}
             {relationship.isOwnProfile ? (
-              <button className="rounded-lg bg-gray-100 px-4 py-1.5 text-sm font-semibold text-gray-900 hover:bg-gray-200">
+              <Link
+                href="/settings"
+                className="rounded-lg bg-gray-100 px-4 py-1.5 text-sm font-semibold text-gray-900 hover:bg-gray-200"
+              >
                 Edit Profile
-              </button>
+              </Link>
             ) : (
               <button
                 onClick={handleFollowToggle}
