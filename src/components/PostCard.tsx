@@ -25,6 +25,10 @@ export interface CommentType {
   };
 }
 
+export interface LikeType {
+  userId: string;
+}
+
 export interface PostType {
   id: string;
   userId: string;
@@ -41,10 +45,15 @@ export interface PostType {
     likes: number;
     comments: number;
   };
+  // ✨ TAMBAHIN BARIS INI
+  likes?: LikeType[];
 }
 
 export default function PostCard({ post }: { post: PostType }) {
-  const [isLiked, setIsLiked] = useState(false);
+  // Kalau post.likes ada dan panjangnya lebih dari 0, berarti kita udah nge-like!
+  const [isLiked, setIsLiked] = useState(
+    post.likes && post.likes.length > 0 ? true : false,
+  );
   const [likesCount, setLikesCount] = useState(post._count.likes);
   const [commentsCount, setCommentsCount] = useState(post._count.comments);
   const [commentText, setCommentText] = useState("");
