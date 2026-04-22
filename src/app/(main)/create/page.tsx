@@ -4,6 +4,8 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/lib/axios";
 import { Image as ImageIcon, X, Loader2 } from "lucide-react";
+// ✨ 1. IMPORT TOAST DI SINI
+import toast from "react-hot-toast";
 
 export default function CreatePostPage() {
   const router = useRouter();
@@ -40,12 +42,17 @@ export default function CreatePostPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
+      // ✨ 2. KASIH TOAST ERROR KALAU LUPA MASUKIN GAMBAR
+      toast.error("Pilih gambar dulu bos!");
       setError("Pilih gambar dulu bos!");
       return;
     }
 
     setIsSubmitting(true);
     setError("");
+
+    // ✨ 3. MUNCULIN LOADING TOAST SEBELUM PROSES UPLOAD DIMULAI
+    const toastId = toast.loading("Mengunggah postingan...");
 
     try {
       // Karena kita ngirim File, kita HARUS pakai FormData (bukan JSON biasa)
@@ -60,10 +67,15 @@ export default function CreatePostPage() {
         },
       });
 
-      alert("Postingan berhasil diupload! 🚀");
+      // ✨ 4. GANTI ALERT JADI TOAST SUCCESS (Otomatis niban toast loading tadi)
+      toast.success("Postingan berhasil diupload! 🚀", { id: toastId });
+
       router.push("/"); // Tendang balik ke Timeline
     } catch (err: unknown) {
       console.error("Gagal upload:", err);
+
+      // ✨ 5. KASIH TOAST ERROR KALAU GAGAL (Otomatis niban toast loading juga)
+      toast.error("Gagal mengupload postingan. Coba lagi ya.", { id: toastId });
       setError("Gagal mengupload postingan. Cek console.");
     } finally {
       setIsSubmitting(false);
