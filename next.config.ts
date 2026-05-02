@@ -8,6 +8,12 @@ const nextConfig = {
         port: '',
         pathname: '/storage/v1/object/public/media/**', // Izinkan semua foto di bucket media
       },
+      {
+        protocol: 'https',
+        hostname: 'ui-avatars.com', // ✨ TAMBAHIN INI
+        port: '',
+        pathname: '/api/**', // ✨ TAMBAHIN INI
+      },
     ],
   },
 };

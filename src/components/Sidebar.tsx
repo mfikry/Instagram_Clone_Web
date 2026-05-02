@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { Home, Search, PlusSquare, User, LogOut } from "lucide-react";
+import { Home, Search, PlusSquare, User, LogOut, Heart } from "lucide-react";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -31,7 +31,13 @@ export default function Sidebar() {
       <div className="mb-8 flex justify-center md:hidden">
         <span className="text-xl font-bold italic text-gray-900">IG</span>
       </div>
-
+      <Link
+        href="/notifications"
+        className="flex items-center gap-4 p-3 hover:bg-gray-100 rounded-lg transition"
+      >
+        <Heart className="w-6 h-6" />
+        <span className="hidden md:block">Notifications</span>
+      </Link>
       {/* Navigasi Menu */}
       <nav className="flex flex-1 flex-col gap-4">
         {navItems.map((item) => {
@@ -55,7 +61,6 @@ export default function Sidebar() {
           );
         })}
       </nav>
-
       {/* Tombol Logout */}
       <button
         onClick={handleLogout}
